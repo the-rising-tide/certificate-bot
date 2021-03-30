@@ -8,6 +8,7 @@
 
 # blocking out own data folder
 data/
+tmp/
 
 # we don't want ANY pycharm stuff...
 .idea/ 
