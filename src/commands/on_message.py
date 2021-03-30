@@ -85,7 +85,7 @@ def handle_message(update: Update, context: CallbackContext):
         session.execute(stmt)
         session.commit()
         text = utl.prep_for_md(f"You're in *delete mode*:\n"
-                               f"{domain_input['domain']} - Port: {domain_input['port']} is no longer tracked for you",
+                               f"{utl.mk_link(domain_input['domain'], domain_input['port'])} is no longer tracked for you",
                                ignore=['*'])
         utl.send_msg(update, context, text,
                      keyboard=kb.main_menu, parse_mode='MarkdownV2')
@@ -130,7 +130,7 @@ def handle_message(update: Update, context: CallbackContext):
     session.commit()
 
     text = utl.prep_for_md(f"You're in *add mode*:\n"
-                           f"Your domain {domain_input['domain']} - Port:{domain_input['port']} is registered.\n"
+                           f"Your domain {utl.mk_link(domain_input['domain'], domain_input['port'])} is registered.\n"
                            f"The current cert is active until: {valid_until}", ignore=['*'])
     utl.send_msg(update, context, text, keyboard=kb.main_menu, parse_mode='MarkdownV2')
 

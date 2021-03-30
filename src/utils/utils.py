@@ -37,6 +37,10 @@ def prep_for_md(text: str, ignore=None) -> str:
     return text
 
 
+def mk_link(link: str, port: Union[str, int]) -> str:
+    """evaluate whether port should be shown or not"""
+    return f'https://{link}:{port}' if str(port) != '443' else f'https://{link}'
+
 # month_list = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
 # # generate a dict of the scheme 'Jan': 01 - 'Dec': '12'
 # mon_abrev_dict = {abrev: f'0{count + 1}' if count < 10 else f'{count + 1}' for count, abrev in enumerate(month_list)}

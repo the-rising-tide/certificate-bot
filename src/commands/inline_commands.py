@@ -104,7 +104,10 @@ def display_watchlist(query: CallbackQuery):
     # build answer string
     response = "__Your watched domains__:\n\n"
     for e in entries:
-        response += f"https://{e.domain}:{e.port} \nexpiry: *{e.not_after.date()}* - last checked {e.last_checked.replace(microsecond=0)}\n\n"
+        port = ''
+        if e.port != '443':
+            port = f':{e.port}'
+        response += f"{utl.mk_link(e.domain, e.port)} \nexpiry: *{e.not_after.date()}* - last checked {e.last_checked.replace(microsecond=0)}\n\n"
 
     resp = utl.prep_for_md(response, ignore=['*', '_'])
     print(resp)
