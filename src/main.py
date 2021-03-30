@@ -18,7 +18,7 @@ from sqlalchemy.ext.declarative import declarative_base
 # it will receive one of multiple connections from the engine and holds on to it until committing or closing
 from sqlalchemy.orm import sessionmaker
 
-import commands.user_commands as cmd
+import commands.commands as cmd
 import commands.on_message as on_msg
 import core.cycle_certs as cycle
 import core.db_models as dbm
