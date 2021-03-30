@@ -1,3 +1,4 @@
+import os
 import logging
 
 # core interface to the database
@@ -8,6 +9,9 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 # prints if a table was created - neat check for making sure nothing is overwritten
 from sqlalchemy import event
+
+if not os.path.exists('data/'):
+    os.mkdir('data/')
 
 engine = create_engine('sqlite:///data/main.db', echo=True)
 Base: declarative_base = declarative_base()
