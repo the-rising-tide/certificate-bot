@@ -10,7 +10,7 @@
     - pip3_packages:
       - sqlalchemy
       - dateparser
-      - telegram
+      - python-telegram-bot
 
   tasks:
   - name: Upgrade all packages to the latest version
