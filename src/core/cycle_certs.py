@@ -84,7 +84,7 @@ def cycle_certs() -> List[Tuple[int, str]]:
             # new_after = datetime.today() - timedelta(2)
             # check whether cert expires in less then a week
             delta = new_after - datetime.today()
-            if delta < timedelta(7):
+            if delta < timedelta(utl.NOTIFY_BEFORE):
                 print("EXPIRES!")
                 message = utl.prep_for_md(f'The certificate for {domain.domain} - Port {domain.port} will expire in:\n'
                                           f'*{delta.days} days*\n'

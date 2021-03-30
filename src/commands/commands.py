@@ -30,7 +30,9 @@ def start(update: Update, context: CallbackContext):
     session.commit()
     context.bot.send_message(
         chat_id=update.message.chat_id,
-        text=f"Hi, you're now registered!\nYour ID is: {update.message.chat.id}",
+        text=f"Hi, you're now registered!\n"
+             f"This bot can watch your certificates and will notify you {utl.NOTIFY_BEFORE} days before the certificate expires"
+             f"Your ID is: {update.message.chat.id}",
         reply_markup=kb.main_menu)
 
 

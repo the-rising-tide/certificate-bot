@@ -1,3 +1,4 @@
+from configparser import ConfigParser
 from typing import Union
 
 from telegram import Update, CallbackQuery
@@ -12,6 +13,10 @@ def send_msg(update: Union[Update, CallbackQuery], context: CallbackContext, tex
                              text=text,
                              parse_mode=parse_mode)
 
+
+config = ConfigParser()
+config.read("settings.ini")
+NOTIFY_BEFORE = int(config['settings']['NOTIFY_BEFORE'])
 
 def prep_for_md(text: str, ignore=None) -> str:
     """
