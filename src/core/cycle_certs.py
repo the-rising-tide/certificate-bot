@@ -51,13 +51,14 @@ def cycle_certs() -> List[Tuple[int, str]]:
             # Remove it from db add waring message and continue
             if not cert:
                 errors += 1
-                message = utl.prep_for_md(f'*ERROR!*\nThere is no certificate for {utl.mk_link(domain.domain, domain.port)}\n'
-                          f'Please check your certificate _immediately_!'
-                          f'_This domain was removed from your watchlist. You can add it again after it got a new cert._',
+                message = utl.prep_for_md(f"*ERROR!*\nCan't resolve {utl.mk_link(domain.domain, domain.port)}\n"
+                          f'Please check your service _immediately_!',
+                          # f'_This domain was removed from your watchlist. You can add it again after it got a new cert._',
                                           ignore=['*', '_'])
                 updates.append((user.chat_id, message))
-                session.query(dbm.Domains).filter(dbm.Domains.domain == domain.domain).delete()
-                session.commit()
+                # TODO: this should not happen immediately...
+                # session.query(dbm.Domains).filter(dbm.Domains.domain == domain.domain).delete()
+                # session.commit()
                 logging.warning(f"{domain.domain}:{domain.port} expired, removed it from database")
                 continue
 
