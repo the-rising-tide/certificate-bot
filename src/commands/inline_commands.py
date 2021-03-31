@@ -6,7 +6,6 @@ from sqlalchemy.engine import Row
 from sqlalchemy import create_engine, select, update
 
 from telegram import Update, CallbackQuery
-from telegram.ext import CallbackContext
 from telegram.error import BadRequest
 
 import core.db_models as dbm
