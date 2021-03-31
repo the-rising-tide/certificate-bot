@@ -63,7 +63,7 @@ def get_help_text() -> str:
     """:return: central help text in markdown style"""
     return prep_for_md('__*Track the certificates of your domains*__\n\n'
                        'Simply send a domain in the chat and it will be tracked.\n\n'
-                       "You'll be notified when one or more of the following cases occurs:\n\n"
+                       "You'll be notified when one or more of the following cases occur:\n\n"
                        '- Changes of the start or expiry date of your certificate\n'
                        f'- Your cert is only valid for less than {NOTIFY_BEFORE} days\n\n'
                        'All registered domains will be checked once a day.\n'
