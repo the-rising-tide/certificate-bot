@@ -28,6 +28,7 @@ def get_entries_by_chat_id(chat_id: int, database=dbm.Domains) -> List[Union[dbm
     # get entries from entered database
     session = sessionmaker(bind=engine)()
     statement: List[Row] = select(database).where(database.chat_id == chat_id)
+
     # extract entry objects from row objects
     entries = [e[0] for e in session.execute(statement).all()]
     return entries
@@ -71,6 +72,8 @@ def watchlist_to_csv(query: CallbackQuery, entries=None) -> str:
         entries = get_entries_by_chat_id(query.message.chat_id)
 
     # make csv string
+    # sort list by earliest to expire first
+    entries = utl.sort_by_expiry(entries)
     response = 'domain;port;notAfter;notBefore;issuer;lastChecked\n'
     for e in entries:
         response += f'{e.domain};{e.port};{e.not_after};{e.not_before};{e.issuer};{e.last_checked}\n'
@@ -86,6 +89,9 @@ def watchlist_to_csv(query: CallbackQuery, entries=None) -> str:
 
 
 def export_watchlist(query: CallbackQuery):
+    """
+    Wrapper for watchlist_to_csv() that handles the telegram part, edits message and sends file
+    """
     path = watchlist_to_csv(query)
     with open(path, 'r') as f:
         query.edit_message_text("Here you go:")
@@ -102,6 +108,8 @@ def display_watchlist(query: CallbackQuery):
     # get entries
     entries = get_entries_by_chat_id(query.message.chat.id)
 
+    # sort entries by expiry date (first to expire comes first)
+    entries = utl.sort_by_expiry(entries)
     # build answer string
     response = "__Your watched domains__:\n\n"
     for e in entries:

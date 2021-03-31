@@ -1,9 +1,10 @@
 from configparser import ConfigParser
-from typing import Union
+from typing import Union, List
 
 from telegram import Update, CallbackQuery
 from telegram.ext import CallbackContext
 
+import core.db_models as dbm
 
 def send_msg(update: Union[Update, CallbackQuery], context: CallbackContext, text, keyboard=None, parse_mode=''):
     if parse_mode == 'md':
@@ -17,6 +18,7 @@ def send_msg(update: Union[Update, CallbackQuery], context: CallbackContext, tex
 config = ConfigParser()
 config.read("settings.ini")
 NOTIFY_BEFORE = int(config['settings']['NOTIFY_BEFORE'])
+
 
 def prep_for_md(text: str, ignore=None) -> str:
     """
@@ -45,6 +47,16 @@ def prep_for_md(text: str, ignore=None) -> str:
 def mk_link(link: str, port: Union[str, int]) -> str:
     """evaluate whether port should be shown or not"""
     return f'https://{link}:{port}' if str(port) != '443' else f'https://{link}'
+
+
+def sort_by_expiry(entries: List[dbm.Domains], reverse=False) -> List[dbm.Domains]:
+    """
+    :param entries: List of domain entries
+    :param reverse: Flips order if true (latest to expire first)
+    Sort entries by expiry date (first to expire comes first)
+    :return: Sorted list
+    """
+    return sorted(entries, key=lambda entry: entry.not_after, reverse=reverse)
 
 # month_list = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
 # # generate a dict of the scheme 'Jan': 01 - 'Dec': '12'
