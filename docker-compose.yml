@@ -8,6 +8,7 @@ services:
     environment:
       - UID=1000
       - GID=1000
+      - API_KEY=
     stdin_open: true
     tty: true
     restart: unless-stopped
