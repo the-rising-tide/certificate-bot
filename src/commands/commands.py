@@ -21,7 +21,11 @@ def start(update: Update, context: CallbackContext):
     # prevent double entries
     # if return has entries - user is in database
     if incmd.get_entries_by_chat_id(update.message.chat_id, database=dbm.Users):
-        utl.send_msg(update, context, f"You're already registered.\nYou ID is {update.message.chat_id}")
+        utl.send_msg(
+            update, context,
+            text=utl.prep_for_md(f"Hey, you're already registered.\nYou ID is: {update.message.chat_id}\n\n") +
+            utl.get_help_text(),
+            keyboard=kb.main_menu, parse_mode='MarkdownV2')
         return
 
     # add new user to database
@@ -30,10 +34,9 @@ def start(update: Update, context: CallbackContext):
     session.commit()
     context.bot.send_message(
         chat_id=update.message.chat_id,
-        text=f"Hi, you're now registered!\n"
-             f"This bot can watch your certificates and will notify you {utl.NOTIFY_BEFORE} days before the certificate expires.\n"
-             f"Your ID is: {update.message.chat.id}",
-        reply_markup=kb.main_menu)
+        text=utl.prep_for_md(f"Hi, you're now registered!\n" f"Your ID is: {update.message.chat.id}\n\n") +
+        utl.get_help_text(),
+        reply_markup=kb.main_menu, parse_mode='MarkdownV2')
 
 
 def handle_callback(update: Update, context: CallbackContext):
