@@ -1,0 +1,37 @@
+# File written by GitHub user MayNiklas, never versions can be found in https://github.com/MayNiklas/github-actions
+#
+# GitHub action for building new docker images when there is a new commit on the master
+# Images are getting pushed to Dockerhub
+#
+# File location: .github/workflows/image.yml
+#
+# Used GitHub secrets:
+# DOCKER_USERNAME
+# DOCKER_PASSWORD
+# DOCKER_REPOSITORY
+
+
+name: Building docker containers
+on:
+  push:
+    branches: main
+  schedule:
+    - cron: "0 2 * * 1"
+jobs:
+  building-amd64:
+    runs-on: ubuntu-latest
+    steps:
+      - name: setup-docker
+        uses: docker-practice/actions-setup-docker@master
+
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      - name: login to docker hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: build the image for amd64
+        run: |
+          docker buildx build --push \
+            --tag "${{ secrets.DOCKER_USERNAME }}"/"${{ secrets.DOCKER_REPOSITORY }}":latest \
+            --platform linux/amd64 .
