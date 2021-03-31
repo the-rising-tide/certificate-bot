@@ -58,6 +58,19 @@ def sort_by_expiry(entries: List[dbm.Domains], reverse=False) -> List[dbm.Domain
     """
     return sorted(entries, key=lambda entry: entry.not_after, reverse=reverse)
 
+
+def get_help_text() -> str:
+    """:return: central help text in markdown style"""
+    return prep_for_md('__*Track the certificates of your domains*__\n\n'
+                       'Simply send a domain in the chat and it will be tracked.\n\n'
+                       "You'll be notified when one or more of the following cases occurs:\n\n"
+                       '- Changes of the start or expiry date of your certificate\n'
+                       f'- Your cert is only valid for less than {NOTIFY_BEFORE} days\n\n'
+                       'All registered domains will be checked once a day.\n'
+                       "To remove a domain from the list use the _Delete entry_ button to toggle deletion mode.\n\n"
+                       "Please visit https://github.com/the-rising-tide/certificate-bot to report any issues",
+                       ignore=['_', '*'])
+
 # month_list = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
 # # generate a dict of the scheme 'Jan': 01 - 'Dec': '12'
 # mon_abrev_dict = {abrev: f'0{count + 1}' if count < 10 else f'{count + 1}' for count, abrev in enumerate(month_list)}

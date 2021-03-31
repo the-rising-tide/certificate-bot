@@ -98,3 +98,7 @@ def handle_callback(update: Update, context: CallbackContext):
     except KeyError:
         logging.error(f"CAN'T FIND COMMAND {key} IN COMMAND_SWITCH\n{traceback.format_exc()}")
         print(f'{key} was NOT listed!')
+
+
+def send_help(update: Update, context: CallbackContext):
+    utl.send_msg(update, context, utl.get_help_text(), keyboard=kb.main_menu, parse_mode='MarkdownV2')

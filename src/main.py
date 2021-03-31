@@ -81,6 +81,8 @@ dispatcher.add_handler(MessageHandler(Filters.text & (~Filters.command), on_msg.
 
 dispatcher.add_handler(CommandHandler(['start'], cmd.start))
 
+dispatcher.add_handler(CommandHandler(['help', 'hilfe', 'h'], cmd.send_help))
+
 # responsible for all inline commands
 dispatcher.add_handler(CallbackQueryHandler(cmd.handle_callback))
 
