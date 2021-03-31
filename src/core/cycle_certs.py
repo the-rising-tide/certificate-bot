@@ -69,7 +69,7 @@ def cycle_certs() -> List[Tuple[int, str]]:
             # check whether something has changed from the expected dates
             if domain.not_before != new_before or domain.not_after != new_after:
                 # print("IS NOT EQUAL")
-                message = utl.prep_for_md(f"The cert of {domain.domain} - Port {domain.port} has changed:\n"
+                message = utl.prep_for_md(f"The cert of {utl.mk_link(domain.domain, domain.port)} has changed:\n"
                           f"notBefore: from {domain.not_before.replace(microsecond=0)} to {new_before.replace(microsecond=0)}\n"
                           f"notAfter: {domain.not_after.replace(microsecond=0)} to {new_after.replace(microsecond=0)}")
 
@@ -86,7 +86,7 @@ def cycle_certs() -> List[Tuple[int, str]]:
             delta = new_after - datetime.today()
             if delta < timedelta(utl.NOTIFY_BEFORE):
                 print("EXPIRES!")
-                message = utl.prep_for_md(f'The certificate for {domain.domain} - Port {domain.port} will expire in:\n'
+                message = utl.prep_for_md(f'The certificate for {utl.mk_link(domain.domain, domain.port)} will expire in:\n'
                                           f'*{delta.days} days*\n'
                                           f'Expiry: {new_after.replace(microsecond=0)}', ignore=['*'])
                 updates.append((user.chat_id, message))
