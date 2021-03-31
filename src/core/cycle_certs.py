@@ -80,7 +80,6 @@ def cycle_certs() -> List[Tuple[int, str]]:
                 # update database object
                 domain.not_before = new_before
                 domain.not_after = new_after
-                domain.last_checked = datetime.today()
 
             # new_after = datetime.today() - timedelta(2)
             # check whether cert expires in less then a week
