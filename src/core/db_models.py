@@ -23,11 +23,12 @@ class Users(Base):
     id = Column(Integer, primary_key=True)
     chat_id = Column(Integer)
     username = Column(String)
+    menu = Column(String)  # saves state of the menu the user is in - useful when awaiting a special response
     add_mode = Column(Boolean)  # True: add domains, False: delete domains
 
     def __repr__(self):
         return f"<UsersEntry: username='{self.username}', chat_id='{self.chat_id}', " \
-               f"primary_key='{self.id}'"
+               f"menu='{self.menu}', add_mode='{self.add_mode}', primary_key='{self.id}'"
 
 
 class Domains(Base):
