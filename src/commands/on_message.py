@@ -27,7 +27,7 @@ def is_domain(link: str) -> Dict[str, Union[str, bool]]:
     # group 3: main domain sub.'example.com'
     # group 4: port example.com':31415'
     pattern = re.compile(r"(((?:[a-z0-9-]+\.)*)([a-z0-9-]+\.[a-z]+))($|\s|:\d{1,5})/*")
-    result = pattern.search(link)
+    result = pattern.search(link.lower())  # use only lowercase internally
     if not result:
         print(f"'{link}' is no valid domain")
         return {}
