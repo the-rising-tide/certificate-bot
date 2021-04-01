@@ -46,7 +46,7 @@ def prep_for_md(text: str, ignore=None) -> str:
 
 def mk_link(link: str, port: Union[str, int]) -> str:
     """evaluate whether port should be shown or not"""
-    return f'https://{link}:{port}' if str(port) != '443' else f'https://{link}'
+    return f'https://{link}:{port}/' if str(port) != '443' else f'https://{link}/'
 
 
 def sort_by_expiry(entries: List[dbm.Domains], reverse=False) -> List[dbm.Domains]:
