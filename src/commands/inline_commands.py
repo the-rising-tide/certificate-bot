@@ -41,10 +41,12 @@ def toggle_add(query: CallbackQuery, state: bool):
     Toggle between add and delete mode
     :return:
     """
+    # statement to update the toggle filed of the user entry
     stmt = (update(dbm.Users)).where(dbm.Users.chat_id == query.message.chat_id).values(add_mode=state)
     session = sessionmaker(bind=engine)()
     session.execute(stmt)
     session.commit()
+    # true means add mode
     if state:
         mode = 'add'
     else:
@@ -55,7 +57,7 @@ def toggle_add(query: CallbackQuery, state: bool):
     try:
         query.edit_message_text(text, reply_markup=kb.main_menu, parse_mode='MarkdownV2')
     except BadRequest as e:
-        # TODO: Handle bad request when my-list button is clicked again -> ignore that command in query?
+        # TODO: Handle bad request when same button is clicked again -> ignore that command in query?
         print("Bad request")
         print(e)
 
@@ -64,8 +66,9 @@ def watchlist_to_csv(query: CallbackQuery, entries=None) -> str:
     """
     :param query: invoked Callback Query
     :param entries: optional - list of entry objects if already queried
-    Makes csv file tmp/(chat_id).csv\n
+    Writes csv file tmp/(chat_id).csv\n
     - creates tmp/ if not exists
+    - entries are ordered from first to expire to last to expire
     :return: Path to file
     """
     if not entries:  # query entries if not given
@@ -102,7 +105,8 @@ def display_watchlist(query: CallbackQuery):
     """
     :param query: Invoked Query
     Inline command for display of all watched domains\n
-    Sends csv file if too many characters (4096 chars)
+    Sends csv file if too many characters (4096 chars)\n
+    - entries are ordered from first to expire to last to expire
     :return: None
     """
     # get entries
@@ -121,6 +125,7 @@ def display_watchlist(query: CallbackQuery):
     if len(resp) > 4096:
         file = watchlist_to_csv(query, entries)
 
+        # send file written in watchlist_to_csv
         with open(file, 'r') as f:
             query.edit_message_text("The list is too long for display - here you go:")
             query.message.chat.send_document(f)
