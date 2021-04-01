@@ -1,6 +1,6 @@
 import logging
 import traceback
-from typing import List
+from typing import List, Union
 
 from sqlalchemy.engine import Row
 from telegram import Update, CallbackQuery, InlineKeyboardMarkup
@@ -109,18 +109,23 @@ def send_help(update: Update, context: CallbackContext):
     utl.send_msg(update, context, utl.get_help_text(), keyboard=kb.main_menu, parse_mode='MarkdownV2')
 
 
-def send_menu(update: Update, context: CallbackContext):
-    """Sends a main menu and some information about the current state of the user"""
+def get_main_menu(chat_id: Union[str, int]) -> str:
+    """:returns: main menu text in markdown format including some information about the current state of the user"""
     # locate user in db
     session = sessionmaker(bind=engine)()
-    statement: List[Row] = select(dbm.Users).where(dbm.Users.chat_id == update.message.chat_id)
+    statement: List[Row] = select(dbm.Users).where(dbm.Users.chat_id == int(chat_id))
     entry: dbm.Users = session.execute(statement).first()[0]  # its a Tuple
     mode = '_add domain mode_ - send a domain and it will be tracked' if entry.add_mode \
         else '_delete domain mode_ - send a domain and it will be removed from you list'
-    utl.send_msg(
-        update, context,
-        utl.prep_for_md(
+    return utl.prep_for_md(
             f'This is the main menu:\n'
             f"You're currently in {mode}.\n\n"
-            f'Your ID: {entry.chat_id}\n', ignore=['_']),
+            f'Your ID: {entry.chat_id}\n', ignore=['_'])
+
+
+def send_menu(update: Update, context: CallbackContext):
+    """Sends a main menu and some information about the current state of the user"""
+    utl.send_msg(
+        update, context,
+        get_main_menu(update.message.chat_id),
         keyboard=kb.main_menu, parse_mode='MarkdownV2')
