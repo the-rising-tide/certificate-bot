@@ -6,6 +6,7 @@ from telegram.ext import CallbackContext
 
 import core.db_models as dbm
 
+
 def send_msg(update: Union[Update, CallbackQuery], context: CallbackContext, text, keyboard=None, parse_mode=''):
     if parse_mode == 'md':
         parse_mode = 'MarkdownV2'
@@ -68,7 +69,9 @@ def get_help_text() -> str:
                        f'- Your cert is only valid for less than {NOTIFY_BEFORE} days\n\n'
                        'All registered domains will be checked once a day.\n'
                        "To remove a domain from the list use the _Delete entry_ button to toggle deletion mode.\n\n"
-                       "Please visit https://github.com/the-rising-tide/certificate-bot to report any issues",
+                       "Use those buttons bellow this message to navigate the bot.\n"
+                       "You can get a new menu using /m or by sending any message in the chat.\n\n"
+                       "Visit https://github.com/the-rising-tide/certificate-bot to report any issues",
                        ignore=['_', '*'])
 
 # month_list = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
