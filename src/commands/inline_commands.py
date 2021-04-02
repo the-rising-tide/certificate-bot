@@ -34,11 +34,13 @@ def get_entries_by_chat_id(chat_id: int, database=dbm.Domains) -> List[Union[dbm
     return entries
 
 
-def toggle_add(query: CallbackQuery, state: bool):
+def toggle_add(query: Union[CallbackQuery, Update], state: bool):
     """
     :param query:
     :param state: True: add mode, False: delete mode
     Toggle between add and delete mode
+
+    Edits message if telegram.Query, but does not send a new message when telegram.Update is given
     :return:
     """
     # statement to update the toggle filed of the user entry
@@ -54,8 +56,12 @@ def toggle_add(query: CallbackQuery, state: bool):
     text = utl.prep_for_md(f"You're in *{mode} mode*\n"
                            "Simply send domains to add in the chat.\nAssuming port 443 if no explicit port is given.\n"
                            "Example: sub.example.com:3145", ignore=['*'])
+    # edit message if inline command was invoked
+
     try:
-        query.edit_message_text(text, reply_markup=kb.main_menu, parse_mode='MarkdownV2')
+        if type(query) is CallbackQuery:
+            query.edit_message_text(text, reply_markup=kb.main_menu, parse_mode='MarkdownV2')
+
     except BadRequest as e:
         # TODO: Handle bad request when same button is clicked again -> ignore that command in query?
         print("Bad request")
