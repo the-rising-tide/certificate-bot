@@ -10,6 +10,7 @@ from telegram.error import BadRequest
 
 import core.db_models as dbm
 import commands.keyboards as kb
+import commands.commands as cmd
 import utils.utils as utl
 
 engine = create_engine('sqlite:///data/main.db', echo=True)
@@ -146,3 +147,13 @@ def display_watchlist(query: CallbackQuery):
         print("Bad request")
         print(e)
         query.edit_message_text(response, reply_markup=kb.main_menu)
+
+
+def main_menu(query: CallbackQuery):
+    """Sends main menu, equivalent to commands.send_menu but inline"""
+    query.edit_message_text(cmd.get_main_menu(query.message.chat_id), reply_markup=kb.main_menu, parse_mode='MarkdownV2')
+
+
+def more_menu(query: CallbackQuery):
+    """Sends more options menu"""
+    query.edit_message_text('Here you go', reply_markup=kb.more_menu)
