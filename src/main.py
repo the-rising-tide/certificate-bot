@@ -85,6 +85,8 @@ dispatcher.add_handler(CommandHandler(['help', 'hilfe', 'h'], cmd.send_help))
 
 dispatcher.add_handler(CommandHandler(['menu', 'm'], cmd.send_menu))
 
+dispatcher.add_handler(CommandHandler(['delete_all', 'deleteall', 'delall', 'wipeall', 'wipe'], cmd.wipe_all))
+
 # responsible for all inline commands
 dispatcher.add_handler(CallbackQueryHandler(cmd.handle_callback))
 

@@ -8,7 +8,7 @@ from telegram.ext import CallbackContext
 
 from sqlalchemy.orm import sessionmaker
 # core interface to the database
-from sqlalchemy import create_engine, select
+from sqlalchemy import create_engine, select, delete
 
 import core.db_models as dbm
 import commands.keyboards as kb
@@ -31,7 +31,7 @@ def start(update: Update, context: CallbackContext):
         return
 
     # add new user to database
-    user = dbm.Users(chat_id=update.message.chat.id, username=update.message.chat.username, add_mode=True)
+    user = dbm.Users(chat_id=update.message.chat.id, username=update.message.chat.username, menu='main', add_mode=True)
     session.add(user)
     session.commit()
     context.bot.send_message(
@@ -53,6 +53,8 @@ def handle_callback(update: Update, context: CallbackContext):
     :return:
     """
     command_switch = {
+        'back': incmd.main_menu,  # functional but not implemented -> keyboards.py
+        'more': incmd.more_menu,  # functional but not implemented -> keyboards.py
         'watchlist': incmd.display_watchlist,
         'export_csv': incmd.export_watchlist,
     }
@@ -129,3 +131,22 @@ def send_menu(update: Update, context: CallbackContext):
         update, context,
         get_main_menu(update.message.chat_id),
         keyboard=kb.main_menu, parse_mode='MarkdownV2')
+
+
+def wipe_all(update: Update, context: CallbackContext):
+    args = update.message.text.split()  # first arg is command itself
+
+    # python seems to evaluate from left to right, so len() handles the case that no second param is gievn
+    if len(args) == 1 or args[1] != 'ALL':
+        utl.send_msg(update, context,
+                     utl.prep_for_md(f"Enter `{args[0]} ALL` to delete *all* tracked entries", ignore=['*', '`']),
+                     keyboard=kb.main_menu, parse_mode='MarkdownV2')
+    else:
+        # we're good to go - delete all entries of that user from database
+        session = sessionmaker(bind=engine)()
+        statement = delete(dbm.Domains).where(dbm.Domains.chat_id == update.message.chat_id)
+        session.execute(statement)
+        session.commit()
+        incmd.toggle_add(update, True)  # set user to add mode, he doesn't have anything delete anymore ;)
+        utl.send_msg(update, context, utl.prep_for_md("Success: All your entries are wiped.\nYou're now in _add mode_",
+                                                      ignore=['_']), keyboard=kb.main_menu, parse_mode='MarkdownV2')

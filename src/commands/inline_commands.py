@@ -50,12 +50,12 @@ def toggle_add(query: Union[CallbackQuery, Update], state: bool):
     session.commit()
     # true means add mode
     if state:
-        mode = 'add'
+        mode = ('add', '')
     else:
-        mode = 'delete'
-    text = utl.prep_for_md(f"You're in *{mode} mode*\n"
-                           "Simply send domains to add in the chat.\nAssuming port 443 if no explicit port is given.\n"
-                           "Example: sub.example.com:3145", ignore=['*'])
+        mode = ('delete', 'Use `/wipe ALL` to delete all your entries.\n')
+    text = utl.prep_for_md(f"You're in *{mode[0]} mode*\n"
+                           f"Simply send domains to add in the chat.\nAssuming port 443 if no explicit port is given.\n"
+                           f"{mode[1]}Example: sub.example.com:3145/", ignore=['*', '`'])
     # edit message if inline command was invoked
 
     try:
