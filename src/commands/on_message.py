@@ -3,7 +3,7 @@ import logging
 from datetime import datetime
 from typing import Dict, Union
 
-from sqlalchemy import create_engine, select, delete
+from sqlalchemy import create_engine, select, delete, and_
 from sqlalchemy.orm import sessionmaker
 from telegram import Update, CallbackQuery
 from telegram.ext import CallbackContext
@@ -79,9 +79,13 @@ def handle_message(update: Update, context: CallbackContext):
     # add_mode == False means delete mode
     # delete entry and return
     if not user.add_mode:
-        stmt = (delete(dbm.Domains).where(dbm.Domains.domain == domain_input['domain']
-                                          and dbm.Domains.port == domain_input['port']
-                                          and dbm.Domains.chat_id == update.message.chat_id))
+        stmt = (delete(dbm.Domains).where(
+            and_(
+                dbm.Domains.domain == domain_input['domain'],
+                dbm.Domains.port == domain_input['port'],
+                dbm.Domains.chat_id == update.message.chat_id)
+                )
+            )
         session.execute(stmt)
         session.commit()
         text = utl.prep_for_md(f"You're in *delete mode*:\n"
@@ -105,9 +109,13 @@ def handle_message(update: Update, context: CallbackContext):
         return False
 
     # check if that user already registered that domain
-    statement = select(dbm.Domains).where(dbm.Domains.domain == domain_input['domain']
-                                          and dbm.Domains.port == domain_input['port']
-                                          and dbm.Domains.chat_id == update.message.chat_id)
+    statement = select(dbm.Domains).where(
+        and_(
+            dbm.Domains.domain == domain_input['domain'],
+            dbm.Domains.port == domain_input['port'],
+            dbm.Domains.chat_id == update.message.chat_id
+        )
+    )
 
     if session.execute(statement).all():
         print("Search:", session.execute(statement).all())
