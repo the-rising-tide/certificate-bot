@@ -8,6 +8,8 @@ import socket
 import json
 import logging
 
+logger = logging.getLogger('cert-bot')
+
 
 def get_cert(base_url: str, port: str) -> Dict[str, str]:
     """
@@ -30,21 +32,21 @@ def get_cert(base_url: str, port: str) -> Dict[str, str]:
     except socket.gaierror as e:
         exception = sys.exc_info()[1]
         print(exception)
-        logging.error(f"Got a SOCKET GAI ERROR during cert request for {base_url}:{port}:\n{traceback.format_exc()}")
+        logger.error(f"Got a SOCKET GAI ERROR during cert request for {base_url}:{port}:\n{traceback.format_exc()}")
         print(f"faulty domain input")
         return {}
 
     except ssl.SSLCertVerificationError as e:
         exception = sys.exc_info()[1]
         print(exception)
-        logging.error(f"Got a SSL VERIFICATION error during cert request for {base_url}:{port}:\n{traceback.format_exc()}")
+        logger.error(f"Got a SSL VERIFICATION error during cert request for {base_url}:{port}:\n{traceback.format_exc()}")
         print("cert verification failed")
         return {}
 
     except socket.timeout as e:
         exception = sys.exc_info()[1]
         print(exception)
-        logging.error(f"Got a TIMEOUT during cert request for {base_url}:{port}:\n{traceback.format_exc()}")
+        logger.error(f"Got a TIMEOUT during cert request for {base_url}:{port}:\n{traceback.format_exc()}")
         print("request timed out")
         return {}
 

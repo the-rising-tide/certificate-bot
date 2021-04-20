@@ -17,6 +17,8 @@ import commands.inline_commands as incmd
 
 engine = create_engine('sqlite:///data/main.db', echo=True)
 
+logger = logging.getLogger('cert-bot')
+
 
 def start(update: Update, context: CallbackContext):
     session = sessionmaker(bind=engine)()
@@ -103,7 +105,7 @@ def handle_callback(update: Update, context: CallbackContext):
 
     # if we fail to extract the key
     except KeyError:
-        logging.error(f"CAN'T FIND COMMAND {key} IN COMMAND_SWITCH\n{traceback.format_exc()}")
+        logger.error(f"CAN'T FIND COMMAND {key} IN COMMAND_SWITCH\n{traceback.format_exc()}")
         print(f'{key} was NOT listed!')
 
 

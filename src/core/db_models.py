@@ -16,6 +16,8 @@ if not os.path.exists('data/'):
 engine = create_engine('sqlite:///data/main.db', echo=True)
 Base: declarative_base = declarative_base()
 
+logger = logging.getLogger('cert-bot')
+
 
 class Users(Base):
     __tablename__ = 'USERS'
@@ -52,7 +54,7 @@ class Domains(Base):
 @event.listens_for(Base.metadata, 'after_create')
 def receive_after_create(target, connection, tables, **kw):
     """listen for the 'after_create' event"""
-    logging.info('A table was created' if tables else 'No table was created')
+    logger.info('A table was created' if tables else 'No table was created')
     print('A table was created' if tables else 'No table was created')
 
 
