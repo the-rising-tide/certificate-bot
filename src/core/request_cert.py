@@ -50,6 +50,13 @@ def get_cert(base_url: str, port: str) -> Dict[str, str]:
         print("request timed out")
         return {}
 
+    except OSError as e:
+        exception = sys.exc_info()[1]
+        print(exception)
+        logger.error(f"Got a OSError during cert request for {base_url}:{port}:\n{traceback.format_exc()}")
+        print("got os error")
+        return {}
+
     dc = json.loads(data)
 
     return dc
