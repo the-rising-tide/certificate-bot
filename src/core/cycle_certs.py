@@ -14,6 +14,8 @@ import core.request_cert as req_ct
 
 engine = create_engine('sqlite:///data/main.db', echo=True)
 
+logger = logging.getLogger('cert-bot')
+
 
 def cycle_certs() -> List[Tuple[int, str]]:
     """
@@ -34,7 +36,7 @@ def cycle_certs() -> List[Tuple[int, str]]:
     users = session.query(dbm.Users).all()
 
     updates: List[Tuple[int, str]] = []
-    logging.info(f"Starting requests for {len(users)} users")
+    logger.info(f"Starting requests for {len(users)} users")
     checked = 0
     errors = 0
     for user in users:
@@ -59,7 +61,7 @@ def cycle_certs() -> List[Tuple[int, str]]:
                 # TODO: this should not happen immediately...
                 # session.query(dbm.Domains).filter(dbm.Domains.domain == domain.domain).delete()
                 # session.commit()
-                logging.warning(f"{domain.domain}:{domain.port} expired, removed it from database")
+                logger.warning(f"{domain.domain}:{domain.port} expired, removed it from database")
                 continue
 
             # extract potential new dates - removing timezone information
@@ -100,9 +102,9 @@ def cycle_certs() -> List[Tuple[int, str]]:
             time.sleep(1)
 
     if errors:
-        logging.warning(f"Finished {checked} requests with {errors} errors")
+        logger.warning(f"Finished {checked} requests with {errors} errors")
     else:
-        logging.info(f"Finished {checked} daily cert requests")
+        logger.info(f"Finished {checked} daily cert requests")
     return updates
 
 
